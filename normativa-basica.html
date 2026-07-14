@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indicador 1.1.1 · Normativa básica</title>
+<style>
+  :root{
+    --sidebar:#1b1f5e;
+    --sidebar-item:#2a2f7a;
+    --sidebar-item-hover:#31377f;
+    --primary:#2563eb;
+    --primary-dark:#1e2a6e;
+    --green:#22c55e;
+    --green-bright:#18cf4a;
+    --green-soft:#e9faef;
+    --amber:#f59e0b;
+    --amber-soft:#fef3e2;
+    --gray-status:#c3c8d1;
+    --gray-soft:#eef0f4;
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --border:#e5e7eb;
+    --border-strong:#d5d9e0;
+    --text:#1f2637;
+    --muted:#6b7280;
+    --link:#2563eb;
+    --shadow:0 1px 2px rgba(16,24,40,.05), 0 4px 14px rgba(16,24,40,.05);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--link);text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    height:74px;background:#fff;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 32px;position:sticky;top:0;z-index:30;
+  }
+  .brand{font-size:22px;font-weight:700;color:#1e2637;letter-spacing:-.2px}
+  .topbar-right{display:flex;align-items:center;gap:16px}
+  .inst-select{
+    display:flex;align-items:center;gap:14px;border:1px solid var(--border-strong);
+    border-radius:10px;padding:11px 16px;font-size:15px;color:#374151;background:#fff;min-width:210px;
+    justify-content:space-between;
+  }
+  .inst-select .chev{color:#6b7280;font-size:12px}
+  .avatar{
+    width:52px;height:52px;border-radius:50%;background:var(--primary-dark);
+    color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;
+  }
+
+  /* ---------- Layout ---------- */
+  .shell{display:grid;grid-template-columns:300px minmax(0,1fr) 360px;align-items:start}
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    background:var(--sidebar);min-height:calc(100vh - 74px);padding:22px 18px 28px;
+    position:sticky;top:74px;align-self:start;
+  }
+  .nav-home{
+    display:flex;align-items:center;gap:12px;background:var(--primary);color:#fff;
+    padding:14px 16px;border-radius:12px;font-weight:600;font-size:16px;margin-bottom:22px;
+  }
+  .nav-home svg{flex:0 0 auto}
+  .nav-label{color:#a9adde;font-size:13px;font-weight:600;letter-spacing:.4px;margin:0 6px 12px}
+  .nav-item{
+    display:flex;align-items:flex-start;gap:11px;color:#e7e9f7;font-size:14.5px;line-height:1.35;
+    padding:12px 14px;border-radius:11px;margin-bottom:8px;cursor:pointer;transition:background .12s;
+  }
+  .nav-item:hover{background:var(--sidebar-item-hover)}
+  .nav-item.active{background:var(--sidebar-item);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .nav-item .dot{flex:0 0 auto;margin-top:1px}
+  .status-check{width:22px;height:22px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center}
+  .status-empty{width:21px;height:21px;border-radius:50%;border:2px solid #6d72ad;display:block}
+  .status-active-dot{width:21px;height:21px;border-radius:50%;border:2px solid #fff;display:block}
+  .nav-more{display:flex;justify-content:center;color:#9c9fd6;padding:8px;margin-top:6px;font-size:16px}
+
+  /* ---------- Main ---------- */
+  .main{padding:28px 34px 60px}
+  .crumbs{font-size:13.5px;color:var(--muted);margin-bottom:14px}
+  .crumbs a{color:var(--muted)}
+  .crumbs b{color:#374151;font-weight:600}
+  .crumbs span{margin:0 8px;color:#c0c4cc}
+
+  .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  .page-title{font-size:29px;font-weight:800;letter-spacing:-.4px;margin:0}
+  .page-sub{color:var(--muted);font-size:15px;margin:6px 0 0}
+  .indicator-chip{
+    display:inline-flex;align-items:center;gap:8px;background:#eef2ff;color:#3730a3;
+    font-weight:700;font-size:12.5px;padding:6px 12px;border-radius:999px;margin-bottom:10px;
+  }
+
+  /* progress summary card */
+  .summary{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);
+    padding:20px 24px;margin:22px 0;display:flex;align-items:center;gap:26px;flex-wrap:wrap;
+  }
+  .summary .metric{font-size:15px;color:var(--muted)}
+  .summary .metric b{display:block;font-size:26px;color:var(--text);font-weight:800;margin-top:2px}
+  .progress-wrap{flex:1;min-width:240px}
+  .progress-top{display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted);margin-bottom:8px}
+  .progress-top b{color:var(--text)}
+  .bar{height:14px;background:var(--gray-soft);border-radius:999px;overflow:hidden}
+  .bar-fill{height:100%;background:var(--green-bright);border-radius:999px;transition:width .35s ease}
+
+  /* guide card */
+  .guide{
+    background:#f1f5ff;border:1px solid #dbe4ff;border-radius:14px;padding:16px 20px;margin-bottom:26px;
+    font-size:14.5px;color:#374151;line-height:1.55;display:flex;gap:13px;
+  }
+  .guide .ico{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:#dbe4ff;color:#2242a8;display:flex;align-items:center;justify-content:center;font-weight:800}
+  .guide b{color:#1e2a6e}
+
+  .section-label{font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin:0 0 14px}
+
+  /* criterion card */
+  .crit{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);
+    padding:22px 24px;margin-bottom:20px;
+  }
+  .crit.state-done{border-left:5px solid var(--green)}
+  .crit.state-progress{border-left:5px solid var(--amber)}
+  .crit.state-pending{border-left:5px solid var(--gray-status)}
+  .crit-head{display:flex;gap:16px;align-items:flex-start}
+  .badge{
+    flex:0 0 auto;width:40px;height:40px;border-radius:11px;background:#eef2ff;color:#3730a3;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;
+  }
+  .crit-title{font-size:16.5px;font-weight:700;margin:2px 0 6px}
+  .crit-text{font-size:14.5px;line-height:1.6;color:#374151;margin:0}
+  .crit-head-right{margin-left:auto;flex:0 0 auto}
+
+  .light-pill{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap}
+  .light-pill .lamp{width:10px;height:10px;border-radius:50%}
+  .pill-done{background:var(--green-soft);color:#15803d}.pill-done .lamp{background:var(--green)}
+  .pill-progress{background:var(--amber-soft);color:#b45309}.pill-progress .lamp{background:var(--amber)}
+  .pill-pending{background:var(--gray-soft);color:#4b5563}.pill-pending .lamp{background:var(--gray-status)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px 56px}
+  .chip{background:#f3f4f8;border:1px solid #e5e7ef;color:#3f465a;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px}
+
+  /* evidence */
+  .evidence{margin:18px 0 0 56px;border-top:1px dashed var(--border);padding-top:16px}
+  .ev-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .ev-head h4{margin:0;font-size:13.5px;font-weight:700;color:#374151}
+  .ev-count{font-size:12.5px;color:var(--muted)}
+  .ev-file{
+    display:flex;align-items:center;gap:12px;background:#fbfbfd;border:1px solid var(--border);
+    border-radius:11px;padding:11px 14px;margin-bottom:9px;
+  }
+  .ev-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex:0 0 auto}
+  .ico-pdf{background:#dc2626}.ico-doc{background:#2563eb}.ico-img{background:#0d9488}
+  .ev-meta{flex:1;min-width:0}
+  .ev-name{font-size:14px;font-weight:600;color:#1f2637;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ev-info{font-size:12px;color:var(--muted);margin-top:2px}
+  .ev-verified{color:#15803d;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:5px}
+  .ev-empty{font-size:13.5px;color:var(--muted);background:#fafafb;border:1px dashed var(--border-strong);border-radius:11px;padding:16px;text-align:center}
+
+  .upload-btn{
+    display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--primary);
+    color:var(--primary);font-weight:600;font-size:13.5px;padding:9px 14px;border-radius:10px;
+  }
+  .upload-btn:hover{background:#eff4ff}
+
+  /* status selector */
+  .crit-actions{display:flex;align-items:center;gap:14px;margin:18px 0 0 56px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:10px;overflow:hidden}
+  .seg button{background:#fff;border:0;padding:9px 15px;font-size:13.5px;color:#4b5563;font-weight:600;border-right:1px solid var(--border)}
+  .seg button:last-child{border-right:0}
+  .seg button.on-pending{background:var(--gray-soft);color:#374151}
+  .seg button.on-progress{background:var(--amber);color:#fff}
+  .seg button.on-done{background:var(--green);color:#fff}
+  .note-btn{background:none;border:0;color:var(--link);font-weight:600;font-size:13.5px;padding:6px}
+
+  /* bottom nav */
+  .bottom-nav{display:flex;justify-content:space-between;gap:14px;margin-top:8px}
+  .btn-ghost{background:#fff;border:1px solid var(--border-strong);color:#374151;font-weight:600;font-size:15px;padding:13px 20px;border-radius:12px}
+  .btn-primary{background:var(--primary-dark);border:0;color:#fff;font-weight:700;font-size:15px;padding:13px 26px;border-radius:12px;display:inline-flex;align-items:center;gap:10px}
+  .btn-primary:hover{background:#182258}
+
+  /* ---------- Right rail ---------- */
+  .rail{padding:28px 30px 40px 6px;position:sticky;top:74px;align-self:start}
+  .rail-card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:20px 22px;margin-bottom:20px}
+  .rail-card h3{margin:0 0 16px;font-size:16px;font-weight:800}
+  .donut-wrap{display:flex;justify-content:center;margin:4px 0 10px}
+  .donut{position:relative;width:170px;height:170px}
+  .donut .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .donut .big{font-size:30px;font-weight:800;color:var(--text)}
+  .donut .small{font-size:13px;color:var(--muted);margin-top:2px}
+  .legend{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .legend div{display:flex;align-items:center;gap:9px;font-size:13.5px;color:#374151}
+  .legend .sw{width:12px;height:12px;border-radius:50%}
+
+  .checklist li{list-style:none;display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #f0f1f5;font-size:14px}
+  .checklist{padding:0;margin:0}
+  .checklist li:last-child{border-bottom:0}
+  .mini{width:22px;height:22px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+  .mini.done{background:var(--green)}.mini.progress{background:var(--amber)}.mini.pending{border:2px solid var(--gray-status)}
+  .checklist .lbl{flex:1}
+  .checklist .st{font-size:12px;font-weight:700}
+  .st.done{color:#15803d}.st.progress{color:#b45309}.st.pending{color:#9ca3af}
+
+  .help p{font-size:14px;line-height:1.6;color:#374151;margin:0 0 10px}
+  .help .ref{font-size:12.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+
+  @media (max-width:1180px){
+    .shell{grid-template-columns:280px 1fr}
+    .rail{grid-column:1 / -1;position:static;padding:8px 34px 40px}
+    .rail-inner{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  }
+  @media (max-width:820px){
+    .shell{grid-template-columns:1fr}
+    .sidebar{display:none}
+    .rail-inner{grid-template-columns:1fr}
+    .topbar{padding:0 18px}.brand{font-size:17px}.inst-select{min-width:0}
+    .chips,.evidence,.crit-actions{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">Plataforma de Autoevaluación Institucional</div>
+    <div class="topbar-right">
+      <div class="inst-select"><span>Universidad Ejemplo</span><span class="chev">▾</span></div>
+      <div class="avatar">U</div>
+    </div>
+  </header>
+
+  <div class="shell">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <a class="nav-home" href="index.html">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 3 3 10.5V21h6v-6h6v6h6V10.5z"/></svg>
+        Resumen
+      </a>
+      <div class="nav-label">INDICADORES</div>
+
+      <a class="nav-item active" href="normativa-basica.html">
+        <span class="dot"><span class="status-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span></span>
+        <span>1. Normativa básica</span>
+      </a>
+      <div class="nav-item">
+        <span class="dot"><span class="status-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span></span>
+        <span>2. Órganos colegiados</span>
+      </div>
+      <div class="nav-item">
+        <span class="dot"><span class="status-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span></span>
+        <span>3. Procesos y funcionamiento de los órganos colegiados</span>
+      </div>
+      <div class="nav-item">
+        <span class="dot"><span class="status-empty"></span></span>
+        <span>4. Liderazgo y legitimidad de los órganos de gobierno</span>
+      </div>
+      <div class="nav-item">
+        <span class="dot"><span class="status-empty"></span></span>
+        <span>5. Clima organizacional adecuado para el desarrollo de las actividades…</span>
+      </div>
+      <div class="nav-item">
+        <span class="dot"><span class="status-empty"></span></span>
+        <span>6. Normativa para regular las áreas y funciones académicas</span>
+      </div>
+      <div class="nav-item">
+        <span class="dot"><span class="status-empty"></span></span>
+        <span>7. Normas para regular las funciones académicas, administrativas y de difusión</span>
+      </div>
+      <div class="nav-item">
+        <span class="dot"><span class="status-empty"></span></span>
+        <span>8. Instrumentos normativos y organización de la función</span>
+      </div>
+      <div class="nav-more">▾</div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="crumbs"><a href="index.html">Resumen</a><span>›</span><b>1. Normativa básica</b></div>
+
+      <div class="page-head">
+        <div>
+          <span class="indicator-chip">METODOLOGÍA CIEES · CATEGORÍA 1</span>
+          <h1 class="page-title">Indicador 1.1.1 · Normativa básica</h1>
+          <p class="page-sub">Existencia y difusión de la normativa fundacional y las políticas que orientan a la institución.</p>
+        </div>
+      </div>
+
+      <!-- Progress summary -->
+      <div class="summary">
+        <div class="metric">Criterios cumplidos<b><span id="doneCount">1</span> / 3</b></div>
+        <div class="progress-wrap">
+          <div class="progress-top"><span>Avance del indicador</span><b id="pctLabel">33%</b></div>
+          <div class="bar"><div class="bar-fill" id="barFill" style="width:33%"></div></div>
+        </div>
+      </div>
+
+      <!-- Guide -->
+      <div class="guide">
+        <div class="ico">i</div>
+        <div><b>¿Qué evalúa este indicador?</b> Los CIEES verifican que la institución cuente con el sustento legal que la crea y con políticas explícitas que orienten su rumbo, así como con evidencia de que esos propósitos se difunden a la comunidad. Adjunta un archivo por cada criterio y marca su estado con el semáforo.</div>
+      </div>
+
+      <div class="section-label">Criterios de evaluación</div>
+
+      <!-- Criterion a -->
+      <article class="crit state-done" data-crit="a">
+        <div class="crit-head">
+          <div class="badge">a</div>
+          <div style="flex:1">
+            <div class="crit-title">Ley orgánica o decreto de creación</div>
+            <p class="crit-text">Ley orgánica o decreto de creación; acta constitutiva y estatutos sociales, en el caso de las instituciones particulares.</p>
+          </div>
+          <div class="crit-head-right"><span class="light-pill pill-done"><span class="lamp"></span>Cumplido</span></div>
+        </div>
+
+        <div class="evidence">
+          <div class="ev-head"><h4>Evidencias cargadas</h4><span class="ev-count">2 archivos</span></div>
+          <div class="ev-file">
+            <div class="ev-ico ico-pdf">PDF</div>
+            <div class="ev-meta"><div class="ev-name">Decreto_de_creacion_1994.pdf</div><div class="ev-info">1.8 MB · Cargado el 12 jun 2026</div></div>
+            <span class="ev-verified">✓ Verificado</span>
+          </div>
+          <div class="ev-file">
+            <div class="ev-ico ico-pdf">PDF</div>
+            <div class="ev-meta"><div class="ev-name">Estatutos_sociales_vigentes.pdf</div><div class="ev-info">920 KB · Cargado el 12 jun 2026</div></div>
+            <span class="ev-verified">✓ Verificado</span>
+          </div>
+          <button class="upload-btn">＋ Subir evidencia</button>
+        </div>
+
+        <div class="crit-actions">
+          <div class="seg" data-seg="a">
+            <button data-v="pending">Pendiente</button>
+            <button data-v="progress">En proceso</button>
+            <button data-v="done" class="on-done">Cumplido</button>
+          </div>
+          <button class="note-btn">＋ Agregar nota</button>
+        </div>
+      </article>
+
+      <!-- Criterion b -->
+      <article class="crit state-progress" data-crit="b">
+        <div class="crit-head">
+          <div class="badge">b</div>
+          <div style="flex:1">
+            <div class="crit-title">Políticas institucionales que orientan el rumbo</div>
+            <p class="crit-text">Políticas institucionales que orienten el rumbo de la institución en cada una de sus funciones. En particular, las políticas y estrategias relacionadas con los criterios orientadores presentados en la LGES–PNEAES.</p>
+          </div>
+          <div class="crit-head-right"><span class="light-pill pill-progress"><span class="lamp"></span>En proceso</span></div>
+        </div>
+
+        <div class="chips">
+          <span class="chip">Responsabilidad social</span>
+          <span class="chip">Equidad social y de género</span>
+          <span class="chip">Inclusión</span>
+          <span class="chip">Excelencia</span>
+          <span class="chip">Vanguardia</span>
+          <span class="chip">Innovación social</span>
+          <span class="chip">Interculturalidad</span>
+        </div>
+
+        <div class="evidence">
+          <div class="ev-head"><h4>Evidencias cargadas</h4><span class="ev-count">1 archivo · faltan criterios orientadores</span></div>
+          <div class="ev-file">
+            <div class="ev-ico ico-doc">DOC</div>
+            <div class="ev-meta"><div class="ev-name">Politicas_institucionales_2025.docx</div><div class="ev-info">640 KB · Cargado el 28 jun 2026</div></div>
+            <span class="ev-verified" style="color:#b45309">⏳ En revisión</span>
+          </div>
+          <button class="upload-btn">＋ Subir evidencia</button>
+        </div>
+
+        <div class="crit-actions">
+          <div class="seg" data-seg="b">
+            <button data-v="pending">Pendiente</button>
+            <button data-v="progress" class="on-progress">En proceso</button>
+            <button data-v="done">Cumplido</button>
+          </div>
+          <button class="note-btn">＋ Agregar nota</button>
+        </div>
+      </article>
+
+      <!-- Criterion c -->
+      <article class="crit state-pending" data-crit="c">
+        <div class="crit-head">
+          <div class="badge">c</div>
+          <div style="flex:1">
+            <div class="crit-title">Difusión de los propósitos institucionales</div>
+            <p class="crit-text">Evidencias físicas o electrónicas de la difusión de los propósitos institucionales (misión, visión y políticas) a la comunidad universitaria.</p>
+          </div>
+          <div class="crit-head-right"><span class="light-pill pill-pending"><span class="lamp"></span>Pendiente</span></div>
+        </div>
+
+        <div class="evidence">
+          <div class="ev-head"><h4>Evidencias cargadas</h4><span class="ev-count">0 archivos</span></div>
+          <div class="ev-empty">Aún no hay evidencias. Sube capturas del sitio web, fotografías de señalización o materiales de difusión que muestren cómo se comunican los propósitos institucionales.</div>
+          <button class="upload-btn" style="margin-top:12px">＋ Subir evidencia</button>
+        </div>
+
+        <div class="crit-actions">
+          <div class="seg" data-seg="c">
+            <button data-v="pending" class="on-pending">Pendiente</button>
+            <button data-v="progress">En proceso</button>
+            <button data-v="done">Cumplido</button>
+          </div>
+          <button class="note-btn">＋ Agregar nota</button>
+        </div>
+      </article>
+
+      <div class="bottom-nav">
+        <button class="btn-ghost" onclick="location.href='index.html'">← Volver al resumen</button>
+        <button class="btn-primary">Guardar y continuar <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M4 11v2h12l-5 5 1.4 1.4L20.8 12l-8.4-7.4L11 6l5 5z"/></svg></button>
+      </div>
+    </main>
+
+    <!-- Right rail -->
+    <aside class="rail">
+     <div class="rail-inner">
+      <div class="rail-card">
+        <h3>Estado del indicador</h3>
+        <div class="donut-wrap">
+          <div class="donut">
+            <svg width="170" height="170" viewBox="0 0 42 42">
+              <circle cx="21" cy="21" r="15.9155" fill="none" stroke="#eef0f4" stroke-width="6"></circle>
+              <circle id="segDone"     cx="21" cy="21" r="15.9155" fill="none" stroke="#22c55e" stroke-width="6" stroke-dasharray="33 67" stroke-dashoffset="25" stroke-linecap="butt"></circle>
+              <circle id="segProgress" cx="21" cy="21" r="15.9155" fill="none" stroke="#f59e0b" stroke-width="6" stroke-dasharray="33 67" stroke-dashoffset="92" stroke-linecap="butt"></circle>
+            </svg>
+            <div class="center"><span class="big" id="donutBig">1/3</span><span class="small">Cumplidos</span></div>
+          </div>
+        </div>
+        <div class="legend">
+          <div><span class="sw" style="background:#22c55e"></span> Cumplidos (<span id="lgDone">1</span>)</div>
+          <div><span class="sw" style="background:#f59e0b"></span> En proceso (<span id="lgProg">1</span>)</div>
+          <div><span class="sw" style="background:#c3c8d1"></span> Pendientes (<span id="lgPend">1</span>)</div>
+        </div>
+      </div>
+
+      <div class="rail-card">
+        <h3>Criterios</h3>
+        <ul class="checklist" id="checklist">
+          <li data-c="a"><span class="mini done"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span><span class="lbl">a) Decreto de creación</span><span class="st done">Cumplido</span></li>
+          <li data-c="b"><span class="mini progress"></span><span class="lbl">b) Políticas institucionales</span><span class="st progress">En proceso</span></li>
+          <li data-c="c"><span class="mini pending"></span><span class="lbl">c) Difusión de propósitos</span><span class="st pending">Pendiente</span></li>
+        </ul>
+      </div>
+
+      <div class="rail-card help">
+        <h3>Guía CIEES</h3>
+        <p>Este indicador corresponde a la <b>Categoría 1: Normativa y gobierno</b>. Un criterio se considera <b>cumplido</b> cuando existe la evidencia documental y ésta es congruente con lo declarado en la autoevaluación.</p>
+        <p class="ref">Fuente: Metodología para la evaluación de programas educativos, CIEES · Marco LGES–PNEAES.</p>
+      </div>
+     </div>
+    </aside>
+
+  </div>
+
+<script>
+  const state = { a:'done', b:'progress', c:'pending' };
+  const stLabels = { done:'Cumplido', progress:'En proceso', pending:'Pendiente' };
+
+  function recalc(){
+    const vals = Object.values(state);
+    const done = vals.filter(v=>v==='done').length;
+    const prog = vals.filter(v=>v==='progress').length;
+    const pend = vals.filter(v=>v==='pending').length;
+    const pct = Math.round((done/3)*100);
+
+    document.getElementById('doneCount').textContent = done;
+    document.getElementById('pctLabel').textContent = pct+'%';
+    document.getElementById('barFill').style.width = pct+'%';
+    document.getElementById('donutBig').textContent = done+'/3';
+    document.getElementById('lgDone').textContent = done;
+    document.getElementById('lgProg').textContent = prog;
+    document.getElementById('lgPend').textContent = pend;
+
+    // donut: done (green) then progress (amber) arcs, offsets rotate the ring
+    const dDone = done/3*100, dProg = prog/3*100;
+    const segD = document.getElementById('segDone');
+    const segP = document.getElementById('segProgress');
+    segD.setAttribute('stroke-dasharray', dDone+' '+(100-dDone));
+    segD.setAttribute('stroke-dashoffset', 25);
+    segP.setAttribute('stroke-dasharray', dProg+' '+(100-dProg));
+    segP.setAttribute('stroke-dashoffset', (25 - dDone + 100) % 100);
+  }
+
+  function applyState(crit,val){
+    state[crit]=val;
+    // card border
+    const card = document.querySelector('.crit[data-crit="'+crit+'"]');
+    card.classList.remove('state-done','state-progress','state-pending');
+    card.classList.add('state-'+val);
+    // header pill
+    const pill = card.querySelector('.light-pill');
+    pill.className = 'light-pill pill-'+val;
+    pill.innerHTML = '<span class="lamp"></span>'+stLabels[val];
+    // segmented buttons
+    card.querySelectorAll('.seg button').forEach(b=>{
+      b.className='';
+      if(b.dataset.v===val) b.classList.add('on-'+val);
+    });
+    // checklist mini + label
+    const li = document.querySelector('#checklist li[data-c="'+crit+'"]');
+    const mini = li.querySelector('.mini');
+    mini.className='mini '+val;
+    mini.innerHTML = val==='done' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>' : '';
+    const st = li.querySelector('.st');
+    st.className='st '+val; st.textContent=stLabels[val];
+    recalc();
+  }
+
+  document.querySelectorAll('.seg').forEach(seg=>{
+    seg.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>applyState(seg.dataset.seg, btn.dataset.v));
+    });
+  });
+
+  document.querySelectorAll('.upload-btn').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();alert('Aquí se abriría el selector de archivos para adjuntar la evidencia.');}));
+  recalc();
+</script>
+</body>
+</html>
